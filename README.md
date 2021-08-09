@@ -1,6 +1,8 @@
 # Project-Road_Accident
 대전시 교통사고 위험지역 도출 by LH
 
+> 최우수상 수상
+
 참가 일정 : 2021.2.25 ~ 2021.4.1
 
 참가 팀명 : Meetwin
