@@ -1,0 +1,2343 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 5,
+  "metadata": {
+    "kernelspec": {
+      "display_name": "Python 3",
+      "language": "python",
+      "name": "python3"
+    },
+    "language_info": {
+      "codemirror_mode": {
+        "name": "ipython",
+        "version": 3
+      },
+      "file_extension": ".py",
+      "mimetype": "text/x-python",
+      "name": "python",
+      "nbconvert_exporter": "python",
+      "pygments_lexer": "ipython3",
+      "version": "3.8.8"
+    },
+    "colab": {
+      "name": "제출용_머신러닝.ipynb",
+      "provenance": [],
+      "include_colab_link": true
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/tjdrhks0808/Project-Road_Accident/blob/main/Daejeon_ML\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "S4JzNVm2ozp0"
+      },
+      "source": [
+        "# 0. Preparing"
+      ],
+      "id": "S4JzNVm2ozp0"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "Eb5kooqWozp1",
+        "outputId": "23fb8d35-f69d-41b4-cad7-191d61675af1"
+      },
+      "source": [
+        "from geoband.API import *\n",
+        "\n",
+        "import math\n",
+        "from tqdm import tqdm\n",
+        "import random\n",
+        "import pandas as pd\n",
+        "import numpy as np\n",
+        "import matplotlib.pyplot as plt\n",
+        "import plotly.offline as py\n",
+        "import plotly.graph_objs as go\n",
+        "import plotly.tools as tls\n",
+        "import folium\n",
+        "import json\n",
+        "import geopandas as gpd\n",
+        "import geopy.distance\n",
+        "\n",
+        "\n",
+        "\n",
+        "import pydeck as pdk\n",
+        "import shapely\n",
+        "import shapefile\n",
+        "import os\n",
+        "import re\n",
+        "import mapboxgl\n",
+        "from mapboxgl.viz import *\n",
+        "import seaborn as sns\n",
+        "\n",
+        "import platform\n",
+        "import requests; from urllib.parse import urlparse\n",
+        "\n",
+        "import warnings\n",
+        "warnings.filterwarnings(action='ignore') #경고 메시지 무시\n",
+        "from IPython.display import display #print가 아닌 display()로 연속 출력"
+      ],
+      "id": "Eb5kooqWozp1",
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "/opt/app-root/lib/python3.6/site-packages/geopandas/_compat.py:91: UserWarning:\n",
+            "\n",
+            "The Shapely GEOS version (3.8.0-CAPI-1.13.1 ) is incompatible with the GEOS version PyGEOS was compiled with (3.9.0-CAPI-1.16.2). Conversions between both will be slow.\n",
+            "\n"
+          ],
+          "name": "stderr"
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "FxyygA9mozp2"
+      },
+      "source": [
+        "from tensorflow.keras.datasets.boston_housing import load_data\n",
+        "from tensorflow.keras.models import Sequential\n",
+        "from tensorflow.keras.layers import Dense"
+      ],
+      "id": "FxyygA9mozp2",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "FyvcOZ24ozp2"
+      },
+      "source": [
+        "import mglearn\n",
+        "from sklearn.linear_model import LinearRegression\n",
+        "from sklearn.linear_model import Lasso\n",
+        "from sklearn.linear_model import Ridge\n",
+        "from sklearn.linear_model import ElasticNet\n",
+        "from sklearn.neighbors import KNeighborsRegressor\n",
+        "from sklearn.tree import DecisionTreeRegressor\n",
+        "from sklearn.ensemble import GradientBoostingRegressor\n",
+        "from sklearn.ensemble import AdaBoostRegressor\n",
+        "from sklearn.ensemble import BaggingRegressor\n",
+        "\n",
+        "from sklearn.preprocessing import MinMaxScaler, StandardScaler\n",
+        "from sklearn.model_selection import train_test_split\n",
+        "from sklearn.model_selection import RandomizedSearchCV \n",
+        "from sklearn.metrics import accuracy_score\n",
+        "from sklearn.metrics import mean_squared_error\n",
+        "from sklearn.utils import shuffle\n",
+        "from mlxtend.regressor import StackingRegressor\n",
+        "import keras.models\n",
+        "import keras.layers\n",
+        "import tensorflow as tf\n",
+        "from scipy.special import erfc\n",
+        "from sklearn.dummy import DummyRegressor\n",
+        "from sklearn.svm import SVR\n",
+        "\n",
+        "from sklearn.model_selection import KFold\n",
+        "from sklearn.model_selection import cross_val_score\n",
+        "\n",
+        "from sklearn.model_selection import train_test_split, cross_validate, RandomizedSearchCV\n",
+        "from sklearn.metrics import accuracy_score, precision_score, recall_score, confusion_matrix, mean_squared_error, r2_score\n",
+        "from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier, RandomForestRegressor, VotingRegressor\n",
+        "\n",
+        "from lightgbm import LGBMRegressor\n",
+        "\n",
+        "import xgboost as xgb\n",
+        "from xgboost import XGBClassifier, XGBRegressor\n",
+        "\n",
+        "import graphviz\n",
+        "import warnings\n"
+      ],
+      "id": "FyvcOZ24ozp2",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "LCl0IRmVozp3"
+      },
+      "source": [
+        "daejeon_data = gpd.read_file('daejeon_data.geojson')"
+      ],
+      "id": "LCl0IRmVozp3",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "WTLrGdPPozp3"
+      },
+      "source": [
+        "> loss 함수정의"
+      ],
+      "id": "WTLrGdPPozp3"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "bEKCEPizozp3"
+      },
+      "source": [
+        "# 각각 root-mean-squared-error / mean abosolute error 구해주는 함수\n",
+        "\n",
+        "def RMSE(y, pred):\n",
+        "    rmse = ( np.sum([x**2 for x in (np.array(y)-np.array(pred))]) / len(y) )**(1/2)\n",
+        "    return round(rmse, 4)\n",
+        "    \n",
+        "def MAE(y, pred):\n",
+        "    mae = np.sum([np.abs(x) for x in (np.array(y)-np.array(pred))]) / len(y)\n",
+        "    return round(mae, 4)"
+      ],
+      "id": "bEKCEPizozp3",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "1LovWhUnozp4"
+      },
+      "source": [
+        "# 1. Epdo 지수 적용 사고건수 중 차대차 모형 생성"
+      ],
+      "id": "1LovWhUnozp4"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "NB2tqJyyozp4"
+      },
+      "source": [
+        "#교통량 있는 격자만 추출\n",
+        "\n",
+        "data = daejeon_data[daejeon_data['isroad']==1]"
+      ],
+      "id": "NB2tqJyyozp4",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "ToNQw4tkozp4"
+      },
+      "source": [
+        "#다른 종속변수들 및 인덱스용 변수 제외\n",
+        "\n",
+        "data = data.drop(['acci_cnt','car_car','car_human','car_only','youth_attack','senior_attack','weak_attack',\n",
+        "                 'youth_victim','senior_victim','weak_victim','victim_na','acci_risk','acci_ratio',\n",
+        "                  'acci_ratio_ctc','acci_ratio_cth','acci_ratio_cal','isroad','geometry'],axis=1)"
+      ],
+      "id": "ToNQw4tkozp4",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "PYSEuMD7ozp4"
+      },
+      "source": [
+        "#스케일링ver / 원본으로 나누기\n",
+        "\n",
+        "scaler = MinMaxScaler()\n",
+        "\n",
+        "data_scaled = data.copy()\n",
+        "\n",
+        "\n",
+        "data_scaled.iloc[:, 1:43 ] = scaler.fit_transform(data_scaled.iloc[:, 1:43 ])"
+      ],
+      "id": "PYSEuMD7ozp4",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "Kc9GKmYDozp5"
+      },
+      "source": [
+        "#불필요한 변수 삭제\n",
+        "\n",
+        "data_car = data.drop(['acci_risk_cth','acci_risk_cal'],axis=1)        #차대사람, 차량단독 변수 제외\n",
+        "data_car_sc = data_scaled.drop(['acci_risk_cth','acci_risk_cal'],axis=1)        #차대사람, 차량단독 변수 제외"
+      ],
+      "id": "Kc9GKmYDozp5",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "04GQJNPGozp5"
+      },
+      "source": [
+        "# train / test 데이터셋 분할\n",
+        "\n",
+        "train, test = train_test_split(data_car, test_size=0.2, random_state=2021)\n",
+        "\n",
+        "x_train = train.iloc[:, 1:42]\n",
+        "y_train = train.iloc[:, 43]\n",
+        "x_test = test.iloc[:, 1:42]\n",
+        "y_test = test.iloc[:, 43]"
+      ],
+      "id": "04GQJNPGozp5",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "zUKxXmzQozp5"
+      },
+      "source": [
+        "# train/test로 분할하지 않은 데이터셋\n",
+        "\n",
+        "x_temp = data_car.iloc[:, 1:42]\n",
+        "y_temp = data_car.iloc[:, 43]\n",
+        "\n",
+        "x_temp_sc = data_car_sc.iloc[:, 1:42]\n",
+        "y_temp_sc = data_car_sc.iloc[:, 43]"
+      ],
+      "id": "zUKxXmzQozp5",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "4B94fOpsozp5"
+      },
+      "source": [
+        "# 2. Machine Learning Model"
+      ],
+      "id": "4B94fOpsozp5"
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "r_yRAHf_ozp5"
+      },
+      "source": [
+        "- ###   RF regressor"
+      ],
+      "id": "r_yRAHf_ozp5"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "0z8ZZjERozp6"
+      },
+      "source": [
+        "rf = RandomForestRegressor(n_estimators = 100, random_state=123)\n",
+        "rf.fit(x_train, y_train)\n",
+        "features = x_train.columns.values"
+      ],
+      "id": "0z8ZZjERozp6",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "ZO6zOtrvozp6"
+      },
+      "source": [
+        "> 변수중요도 시각화"
+      ],
+      "id": "ZO6zOtrvozp6"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "h2i9dMEhozp6",
+        "outputId": "c03335ff-2f33-488c-a7da-4f6ad42c69a6"
+      },
+      "source": [
+        "x, y = (list(x) for x in zip(*sorted(zip(rf.feature_importances_,features), reverse=False)))\n",
+        "\n",
+        "trace = go.Bar(x=x, y=y, marker = dict(\n",
+        "                                color = x,\n",
+        "                                colorscale = 'Viridis',\n",
+        "                                reversescale = True),\n",
+        "                              name = 'Random Forest Feature Importances',\n",
+        "                              orientation = 'h')\n",
+        "\n",
+        "layout = dict(title = 'Barplot of feature importances', width = 900, height = 2000, \n",
+        "              yaxis = dict(showgrid=False, showline = False, showticklabels = True, domain = [1,1]))\n",
+        "\n",
+        "fig1 = go.Figure(data=[trace])\n",
+        "fig1['layout'].update(layout)\n",
+        "py.iplot(fig1, filename='plots')"
+      ],
+      "id": "h2i9dMEhozp6",
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "display_data",
+          "data": {
+            "application/vnd.plotly.v1+json": {
+              "config": {
+                "linkText": "Export to plot.ly",
+                "plotlyServerURL": "https://plot.ly",
+                "showLink": false
+              },
+              "data": [
+                {
+                  "marker": {
+                    "color": [
+                      0,
+                      0,
+                      0.0017966130473078667,
+                      0.0020448654929007,
+                      0.00277376122876527,
+                      0.0031982359773806124,
+                      0.003646160795122196,
+                      0.0040168596639769405,
+                      0.004573926314717081,
+                      0.0050209474245074635,
+                      0.005751805468400386,
+                      0.005783405783316399,
+                      0.00611238170244281,
+                      0.007325775687432348,
+                      0.008018887382360744,
+                      0.008230453984431091,
+                      0.008309452330998592,
+                      0.009014683317577484,
+                      0.009552158336068943,
+                      0.009569169940737341,
+                      0.009875342138893902,
+                      0.01037194931715789,
+                      0.010399941998975816,
+                      0.010514017435495484,
+                      0.01077143256424552,
+                      0.01114173899456542,
+                      0.01122342340817599,
+                      0.013319785828430344,
+                      0.013575169011328695,
+                      0.01561187441262448,
+                      0.016069994532730503,
+                      0.01628164330173239,
+                      0.016586819232936787,
+                      0.016693948666966482,
+                      0.024047119803404515,
+                      0.02596220310723244,
+                      0.02996421124947302,
+                      0.030508217512759322,
+                      0.035478668461442556,
+                      0.16336272599158752,
+                      0.40350022915139666
+                    ],
+                    "colorscale": [
+                      [
+                        0,
+                        "#440154"
+                      ],
+                      [
+                        0.1111111111111111,
+                        "#482878"
+                      ],
+                      [
+                        0.2222222222222222,
+                        "#3e4989"
+                      ],
+                      [
+                        0.3333333333333333,
+                        "#31688e"
+                      ],
+                      [
+                        0.4444444444444444,
+                        "#26828e"
+                      ],
+                      [
+                        0.5555555555555556,
+                        "#1f9e89"
+                      ],
+                      [
+                        0.6666666666666666,
+                        "#35b779"
+                      ],
+                      [
+                        0.7777777777777778,
+                        "#6ece58"
+                      ],
+                      [
+                        0.8888888888888888,
+                        "#b5de2b"
+                      ],
+                      [
+                        1,
+                        "#fde725"
+                      ]
+                    ],
+                    "reversescale": true
+                  },
+                  "name": "Random Forest Feature Importances",
+                  "orientation": "h",
+                  "type": "bar",
+                  "x": [
+                    0,
+                    0,
+                    0.0017966130473078667,
+                    0.0020448654929007,
+                    0.00277376122876527,
+                    0.0031982359773806124,
+                    0.003646160795122196,
+                    0.0040168596639769405,
+                    0.004573926314717081,
+                    0.0050209474245074635,
+                    0.005751805468400386,
+                    0.005783405783316399,
+                    0.00611238170244281,
+                    0.007325775687432348,
+                    0.008018887382360744,
+                    0.008230453984431091,
+                    0.008309452330998592,
+                    0.009014683317577484,
+                    0.009552158336068943,
+                    0.009569169940737341,
+                    0.009875342138893902,
+                    0.01037194931715789,
+                    0.010399941998975816,
+                    0.010514017435495484,
+                    0.01077143256424552,
+                    0.01114173899456542,
+                    0.01122342340817599,
+                    0.013319785828430344,
+                    0.013575169011328695,
+                    0.01561187441262448,
+                    0.016069994532730503,
+                    0.01628164330173239,
+                    0.016586819232936787,
+                    0.016693948666966482,
+                    0.024047119803404515,
+                    0.02596220310723244,
+                    0.02996421124947302,
+                    0.030508217512759322,
+                    0.035478668461442556,
+                    0.16336272599158752,
+                    0.40350022915139666
+                  ],
+                  "y": [
+                    "crosswalk_ar",
+                    "noparking_ar",
+                    "express",
+                    "car_lane",
+                    "speed_30",
+                    "school_cnt",
+                    "ssm_cnt",
+                    "cctv",
+                    "parkinglot_cnt",
+                    "pop_chd",
+                    "subway_cnt",
+                    "oneway",
+                    "TURN_P",
+                    "intersects",
+                    "house",
+                    "barrier_road",
+                    "width_4",
+                    "pop_all",
+                    "pop_sen",
+                    "width_1",
+                    "pop_prd",
+                    "office",
+                    "width_3",
+                    "speed_80_to_110",
+                    "safe_zone",
+                    "speed_0",
+                    "width_2",
+                    "general",
+                    "speed_60_to_70",
+                    "building_tot",
+                    "speed_40_to_50",
+                    "other",
+                    "cars_cnt",
+                    "width_5",
+                    "freq_max_inter",
+                    "sign_traffic",
+                    "restaurant_cnt",
+                    "time_max_inter",
+                    "trlight_pas",
+                    "trlight_car",
+                    "traffic_total_sum_inter"
+                  ]
+                }
+              ],
+              "layout": {
+                "height": 2000,
+                "template": {
+                  "data": {
+                    "bar": [
+                      {
+                        "error_x": {
+                          "color": "#2a3f5f"
+                        },
+                        "error_y": {
+                          "color": "#2a3f5f"
+                        },
+                        "marker": {
+                          "line": {
+                            "color": "#E5ECF6",
+                            "width": 0.5
+                          }
+                        },
+                        "type": "bar"
+                      }
+                    ],
+                    "barpolar": [
+                      {
+                        "marker": {
+                          "line": {
+                            "color": "#E5ECF6",
+                            "width": 0.5
+                          }
+                        },
+                        "type": "barpolar"
+                      }
+                    ],
+                    "carpet": [
+                      {
+                        "aaxis": {
+                          "endlinecolor": "#2a3f5f",
+                          "gridcolor": "white",
+                          "linecolor": "white",
+                          "minorgridcolor": "white",
+                          "startlinecolor": "#2a3f5f"
+                        },
+                        "baxis": {
+                          "endlinecolor": "#2a3f5f",
+                          "gridcolor": "white",
+                          "linecolor": "white",
+                          "minorgridcolor": "white",
+                          "startlinecolor": "#2a3f5f"
+                        },
+                        "type": "carpet"
+                      }
+                    ],
+                    "choropleth": [
+                      {
+                        "colorbar": {
+                          "outlinewidth": 0,
+                          "ticks": ""
+                        },
+                        "type": "choropleth"
+                      }
+                    ],
+                    "contour": [
+                      {
+                        "colorbar": {
+                          "outlinewidth": 0,
+                          "ticks": ""
+                        },
+                        "colorscale": [
+                          [
+                            0,
+                            "#0d0887"
+                          ],
+                          [
+                            0.1111111111111111,
+                            "#46039f"
+                          ],
+                          [
+                            0.2222222222222222,
+                            "#7201a8"
+                          ],
+                          [
+                            0.3333333333333333,
+                            "#9c179e"
+                          ],
+                          [
+                            0.4444444444444444,
+                            "#bd3786"
+                          ],
+                          [
+                            0.5555555555555556,
+                            "#d8576b"
+                          ],
+                          [
+                            0.6666666666666666,
+                            "#ed7953"
+                          ],
+                          [
+                            0.7777777777777778,
+                            "#fb9f3a"
+                          ],
+                          [
+                            0.8888888888888888,
+                            "#fdca26"
+                          ],
+                          [
+                            1,
+                            "#f0f921"
+                          ]
+                        ],
+                        "type": "contour"
+                      }
+                    ],
+                    "contourcarpet": [
+                      {
+                        "colorbar": {
+                          "outlinewidth": 0,
+                          "ticks": ""
+                        },
+                        "type": "contourcarpet"
+                      }
+                    ],
+                    "heatmap": [
+                      {
+                        "colorbar": {
+                          "outlinewidth": 0,
+                          "ticks": ""
+                        },
+                        "colorscale": [
+                          [
+                            0,
+                            "#0d0887"
+                          ],
+                          [
+                            0.1111111111111111,
+                            "#46039f"
+                          ],
+                          [
+                            0.2222222222222222,
+                            "#7201a8"
+                          ],
+                          [
+                            0.3333333333333333,
+                            "#9c179e"
+                          ],
+                          [
+                            0.4444444444444444,
+                            "#bd3786"
+                          ],
+                          [
+                            0.5555555555555556,
+                            "#d8576b"
+                          ],
+                          [
+                            0.6666666666666666,
+                            "#ed7953"
+                          ],
+                          [
+                            0.7777777777777778,
+                            "#fb9f3a"
+                          ],
+                          [
+                            0.8888888888888888,
+                            "#fdca26"
+                          ],
+                          [
+                            1,
+                            "#f0f921"
+                          ]
+                        ],
+                        "type": "heatmap"
+                      }
+                    ],
+                    "heatmapgl": [
+                      {
+                        "colorbar": {
+                          "outlinewidth": 0,
+                          "ticks": ""
+                        },
+                        "colorscale": [
+                          [
+                            0,
+                            "#0d0887"
+                          ],
+                          [
+                            0.1111111111111111,
+                            "#46039f"
+                          ],
+                          [
+                            0.2222222222222222,
+                            "#7201a8"
+                          ],
+                          [
+                            0.3333333333333333,
+                            "#9c179e"
+                          ],
+                          [
+                            0.4444444444444444,
+                            "#bd3786"
+                          ],
+                          [
+                            0.5555555555555556,
+                            "#d8576b"
+                          ],
+                          [
+                            0.6666666666666666,
+                            "#ed7953"
+                          ],
+                          [
+                            0.7777777777777778,
+                            "#fb9f3a"
+                          ],
+                          [
+                            0.8888888888888888,
+                            "#fdca26"
+                          ],
+                          [
+                            1,
+                            "#f0f921"
+                          ]
+                        ],
+                        "type": "heatmapgl"
+                      }
+                    ],
+                    "histogram": [
+                      {
+                        "marker": {
+                          "colorbar": {
+                            "outlinewidth": 0,
+                            "ticks": ""
+                          }
+                        },
+                        "type": "histogram"
+                      }
+                    ],
+                    "histogram2d": [
+                      {
+                        "colorbar": {
+                          "outlinewidth": 0,
+                          "ticks": ""
+                        },
+                        "colorscale": [
+                          [
+                            0,
+                            "#0d0887"
+                          ],
+                          [
+                            0.1111111111111111,
+                            "#46039f"
+                          ],
+                          [
+                            0.2222222222222222,
+                            "#7201a8"
+                          ],
+                          [
+                            0.3333333333333333,
+                            "#9c179e"
+                          ],
+                          [
+                            0.4444444444444444,
+                            "#bd3786"
+                          ],
+                          [
+                            0.5555555555555556,
+                            "#d8576b"
+                          ],
+                          [
+                            0.6666666666666666,
+                            "#ed7953"
+                          ],
+                          [
+                            0.7777777777777778,
+                            "#fb9f3a"
+                          ],
+                          [
+                            0.8888888888888888,
+                            "#fdca26"
+                          ],
+                          [
+                            1,
+                            "#f0f921"
+                          ]
+                        ],
+                        "type": "histogram2d"
+                      }
+                    ],
+                    "histogram2dcontour": [
+                      {
+                        "colorbar": {
+                          "outlinewidth": 0,
+                          "ticks": ""
+                        },
+                        "colorscale": [
+                          [
+                            0,
+                            "#0d0887"
+                          ],
+                          [
+                            0.1111111111111111,
+                            "#46039f"
+                          ],
+                          [
+                            0.2222222222222222,
+                            "#7201a8"
+                          ],
+                          [
+                            0.3333333333333333,
+                            "#9c179e"
+                          ],
+                          [
+                            0.4444444444444444,
+                            "#bd3786"
+                          ],
+                          [
+                            0.5555555555555556,
+                            "#d8576b"
+                          ],
+                          [
+                            0.6666666666666666,
+                            "#ed7953"
+                          ],
+                          [
+                            0.7777777777777778,
+                            "#fb9f3a"
+                          ],
+                          [
+                            0.8888888888888888,
+                            "#fdca26"
+                          ],
+                          [
+                            1,
+                            "#f0f921"
+                          ]
+                        ],
+                        "type": "histogram2dcontour"
+                      }
+                    ],
+                    "mesh3d": [
+                      {
+                        "colorbar": {
+                          "outlinewidth": 0,
+                          "ticks": ""
+                        },
+                        "type": "mesh3d"
+                      }
+                    ],
+                    "parcoords": [
+                      {
+                        "line": {
+                          "colorbar": {
+                            "outlinewidth": 0,
+                            "ticks": ""
+                          }
+                        },
+                        "type": "parcoords"
+                      }
+                    ],
+                    "pie": [
+                      {
+                        "automargin": true,
+                        "type": "pie"
+                      }
+                    ],
+                    "scatter": [
+                      {
+                        "marker": {
+                          "colorbar": {
+                            "outlinewidth": 0,
+                            "ticks": ""
+                          }
+                        },
+                        "type": "scatter"
+                      }
+                    ],
+                    "scatter3d": [
+                      {
+                        "line": {
+                          "colorbar": {
+                            "outlinewidth": 0,
+                            "ticks": ""
+                          }
+                        },
+                        "marker": {
+                          "colorbar": {
+                            "outlinewidth": 0,
+                            "ticks": ""
+                          }
+                        },
+                        "type": "scatter3d"
+                      }
+                    ],
+                    "scattercarpet": [
+                      {
+                        "marker": {
+                          "colorbar": {
+                            "outlinewidth": 0,
+                            "ticks": ""
+                          }
+                        },
+                        "type": "scattercarpet"
+                      }
+                    ],
+                    "scattergeo": [
+                      {
+                        "marker": {
+                          "colorbar": {
+                            "outlinewidth": 0,
+                            "ticks": ""
+                          }
+                        },
+                        "type": "scattergeo"
+                      }
+                    ],
+                    "scattergl": [
+                      {
+                        "marker": {
+                          "colorbar": {
+                            "outlinewidth": 0,
+                            "ticks": ""
+                          }
+                        },
+                        "type": "scattergl"
+                      }
+                    ],
+                    "scattermapbox": [
+                      {
+                        "marker": {
+                          "colorbar": {
+                            "outlinewidth": 0,
+                            "ticks": ""
+                          }
+                        },
+                        "type": "scattermapbox"
+                      }
+                    ],
+                    "scatterpolar": [
+                      {
+                        "marker": {
+                          "colorbar": {
+                            "outlinewidth": 0,
+                            "ticks": ""
+                          }
+                        },
+                        "type": "scatterpolar"
+                      }
+                    ],
+                    "scatterpolargl": [
+                      {
+                        "marker": {
+                          "colorbar": {
+                            "outlinewidth": 0,
+                            "ticks": ""
+                          }
+                        },
+                        "type": "scatterpolargl"
+                      }
+                    ],
+                    "scatterternary": [
+                      {
+                        "marker": {
+                          "colorbar": {
+                            "outlinewidth": 0,
+                            "ticks": ""
+                          }
+                        },
+                        "type": "scatterternary"
+                      }
+                    ],
+                    "surface": [
+                      {
+                        "colorbar": {
+                          "outlinewidth": 0,
+                          "ticks": ""
+                        },
+                        "colorscale": [
+                          [
+                            0,
+                            "#0d0887"
+                          ],
+                          [
+                            0.1111111111111111,
+                            "#46039f"
+                          ],
+                          [
+                            0.2222222222222222,
+                            "#7201a8"
+                          ],
+                          [
+                            0.3333333333333333,
+                            "#9c179e"
+                          ],
+                          [
+                            0.4444444444444444,
+                            "#bd3786"
+                          ],
+                          [
+                            0.5555555555555556,
+                            "#d8576b"
+                          ],
+                          [
+                            0.6666666666666666,
+                            "#ed7953"
+                          ],
+                          [
+                            0.7777777777777778,
+                            "#fb9f3a"
+                          ],
+                          [
+                            0.8888888888888888,
+                            "#fdca26"
+                          ],
+                          [
+                            1,
+                            "#f0f921"
+                          ]
+                        ],
+                        "type": "surface"
+                      }
+                    ],
+                    "table": [
+                      {
+                        "cells": {
+                          "fill": {
+                            "color": "#EBF0F8"
+                          },
+                          "line": {
+                            "color": "white"
+                          }
+                        },
+                        "header": {
+                          "fill": {
+                            "color": "#C8D4E3"
+                          },
+                          "line": {
+                            "color": "white"
+                          }
+                        },
+                        "type": "table"
+                      }
+                    ]
+                  },
+                  "layout": {
+                    "annotationdefaults": {
+                      "arrowcolor": "#2a3f5f",
+                      "arrowhead": 0,
+                      "arrowwidth": 1
+                    },
+                    "autotypenumbers": "strict",
+                    "coloraxis": {
+                      "colorbar": {
+                        "outlinewidth": 0,
+                        "ticks": ""
+                      }
+                    },
+                    "colorscale": {
+                      "diverging": [
+                        [
+                          0,
+                          "#8e0152"
+                        ],
+                        [
+                          0.1,
+                          "#c51b7d"
+                        ],
+                        [
+                          0.2,
+                          "#de77ae"
+                        ],
+                        [
+                          0.3,
+                          "#f1b6da"
+                        ],
+                        [
+                          0.4,
+                          "#fde0ef"
+                        ],
+                        [
+                          0.5,
+                          "#f7f7f7"
+                        ],
+                        [
+                          0.6,
+                          "#e6f5d0"
+                        ],
+                        [
+                          0.7,
+                          "#b8e186"
+                        ],
+                        [
+                          0.8,
+                          "#7fbc41"
+                        ],
+                        [
+                          0.9,
+                          "#4d9221"
+                        ],
+                        [
+                          1,
+                          "#276419"
+                        ]
+                      ],
+                      "sequential": [
+                        [
+                          0,
+                          "#0d0887"
+                        ],
+                        [
+                          0.1111111111111111,
+                          "#46039f"
+                        ],
+                        [
+                          0.2222222222222222,
+                          "#7201a8"
+                        ],
+                        [
+                          0.3333333333333333,
+                          "#9c179e"
+                        ],
+                        [
+                          0.4444444444444444,
+                          "#bd3786"
+                        ],
+                        [
+                          0.5555555555555556,
+                          "#d8576b"
+                        ],
+                        [
+                          0.6666666666666666,
+                          "#ed7953"
+                        ],
+                        [
+                          0.7777777777777778,
+                          "#fb9f3a"
+                        ],
+                        [
+                          0.8888888888888888,
+                          "#fdca26"
+                        ],
+                        [
+                          1,
+                          "#f0f921"
+                        ]
+                      ],
+                      "sequentialminus": [
+                        [
+                          0,
+                          "#0d0887"
+                        ],
+                        [
+                          0.1111111111111111,
+                          "#46039f"
+                        ],
+                        [
+                          0.2222222222222222,
+                          "#7201a8"
+                        ],
+                        [
+                          0.3333333333333333,
+                          "#9c179e"
+                        ],
+                        [
+                          0.4444444444444444,
+                          "#bd3786"
+                        ],
+                        [
+                          0.5555555555555556,
+                          "#d8576b"
+                        ],
+                        [
+                          0.6666666666666666,
+                          "#ed7953"
+                        ],
+                        [
+                          0.7777777777777778,
+                          "#fb9f3a"
+                        ],
+                        [
+                          0.8888888888888888,
+                          "#fdca26"
+                        ],
+                        [
+                          1,
+                          "#f0f921"
+                        ]
+                      ]
+                    },
+                    "colorway": [
+                      "#636efa",
+                      "#EF553B",
+                      "#00cc96",
+                      "#ab63fa",
+                      "#FFA15A",
+                      "#19d3f3",
+                      "#FF6692",
+                      "#B6E880",
+                      "#FF97FF",
+                      "#FECB52"
+                    ],
+                    "font": {
+                      "color": "#2a3f5f"
+                    },
+                    "geo": {
+                      "bgcolor": "white",
+                      "lakecolor": "white",
+                      "landcolor": "#E5ECF6",
+                      "showlakes": true,
+                      "showland": true,
+                      "subunitcolor": "white"
+                    },
+                    "hoverlabel": {
+                      "align": "left"
+                    },
+                    "hovermode": "closest",
+                    "mapbox": {
+                      "style": "light"
+                    },
+                    "paper_bgcolor": "white",
+                    "plot_bgcolor": "#E5ECF6",
+                    "polar": {
+                      "angularaxis": {
+                        "gridcolor": "white",
+                        "linecolor": "white",
+                        "ticks": ""
+                      },
+                      "bgcolor": "#E5ECF6",
+                      "radialaxis": {
+                        "gridcolor": "white",
+                        "linecolor": "white",
+                        "ticks": ""
+                      }
+                    },
+                    "scene": {
+                      "xaxis": {
+                        "backgroundcolor": "#E5ECF6",
+                        "gridcolor": "white",
+                        "gridwidth": 2,
+                        "linecolor": "white",
+                        "showbackground": true,
+                        "ticks": "",
+                        "zerolinecolor": "white"
+                      },
+                      "yaxis": {
+                        "backgroundcolor": "#E5ECF6",
+                        "gridcolor": "white",
+                        "gridwidth": 2,
+                        "linecolor": "white",
+                        "showbackground": true,
+                        "ticks": "",
+                        "zerolinecolor": "white"
+                      },
+                      "zaxis": {
+                        "backgroundcolor": "#E5ECF6",
+                        "gridcolor": "white",
+                        "gridwidth": 2,
+                        "linecolor": "white",
+                        "showbackground": true,
+                        "ticks": "",
+                        "zerolinecolor": "white"
+                      }
+                    },
+                    "shapedefaults": {
+                      "line": {
+                        "color": "#2a3f5f"
+                      }
+                    },
+                    "ternary": {
+                      "aaxis": {
+                        "gridcolor": "white",
+                        "linecolor": "white",
+                        "ticks": ""
+                      },
+                      "baxis": {
+                        "gridcolor": "white",
+                        "linecolor": "white",
+                        "ticks": ""
+                      },
+                      "bgcolor": "#E5ECF6",
+                      "caxis": {
+                        "gridcolor": "white",
+                        "linecolor": "white",
+                        "ticks": ""
+                      }
+                    },
+                    "title": {
+                      "x": 0.05
+                    },
+                    "xaxis": {
+                      "automargin": true,
+                      "gridcolor": "white",
+                      "linecolor": "white",
+                      "ticks": "",
+                      "title": {
+                        "standoff": 15
+                      },
+                      "zerolinecolor": "white",
+                      "zerolinewidth": 2
+                    },
+                    "yaxis": {
+                      "automargin": true,
+                      "gridcolor": "white",
+                      "linecolor": "white",
+                      "ticks": "",
+                      "title": {
+                        "standoff": 15
+                      },
+                      "zerolinecolor": "white",
+                      "zerolinewidth": 2
+                    }
+                  }
+                },
+                "title": {
+                  "text": "Barplot of feature importances"
+                },
+                "width": 900,
+                "yaxis": {
+                  "domain": [
+                    1,
+                    1
+                  ],
+                  "showgrid": false,
+                  "showline": false,
+                  "showticklabels": true
+                }
+              }
+            },
+            "text/html": [
+              "<div>                            <div id=\"37c10136-ece0-4f5e-9c86-091611eb2bf3\" class=\"plotly-graph-div\" style=\"height:2000px; width:900px;\"></div>            <script type=\"text/javascript\">                require([\"plotly\"], function(Plotly) {                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById(\"37c10136-ece0-4f5e-9c86-091611eb2bf3\")) {                    Plotly.newPlot(                        \"37c10136-ece0-4f5e-9c86-091611eb2bf3\",                        [{\"marker\": {\"color\": [0.0, 0.0, 0.0017966130473078667, 0.0020448654929007, 0.00277376122876527, 0.0031982359773806124, 0.003646160795122196, 0.0040168596639769405, 0.004573926314717081, 0.0050209474245074635, 0.005751805468400386, 0.005783405783316399, 0.00611238170244281, 0.007325775687432348, 0.008018887382360744, 0.008230453984431091, 0.008309452330998592, 0.009014683317577484, 0.009552158336068943, 0.009569169940737341, 0.009875342138893902, 0.01037194931715789, 0.010399941998975816, 0.010514017435495484, 0.01077143256424552, 0.01114173899456542, 0.01122342340817599, 0.013319785828430344, 0.013575169011328695, 0.01561187441262448, 0.016069994532730503, 0.01628164330173239, 0.016586819232936787, 0.016693948666966482, 0.024047119803404515, 0.02596220310723244, 0.02996421124947302, 0.030508217512759322, 0.035478668461442556, 0.16336272599158752, 0.40350022915139666], \"colorscale\": [[0.0, \"#440154\"], [0.1111111111111111, \"#482878\"], [0.2222222222222222, \"#3e4989\"], [0.3333333333333333, \"#31688e\"], [0.4444444444444444, \"#26828e\"], [0.5555555555555556, \"#1f9e89\"], [0.6666666666666666, \"#35b779\"], [0.7777777777777778, \"#6ece58\"], [0.8888888888888888, \"#b5de2b\"], [1.0, \"#fde725\"]], \"reversescale\": true}, \"name\": \"Random Forest Feature Importances\", \"orientation\": \"h\", \"type\": \"bar\", \"x\": [0.0, 0.0, 0.0017966130473078667, 0.0020448654929007, 0.00277376122876527, 0.0031982359773806124, 0.003646160795122196, 0.0040168596639769405, 0.004573926314717081, 0.0050209474245074635, 0.005751805468400386, 0.005783405783316399, 0.00611238170244281, 0.007325775687432348, 0.008018887382360744, 0.008230453984431091, 0.008309452330998592, 0.009014683317577484, 0.009552158336068943, 0.009569169940737341, 0.009875342138893902, 0.01037194931715789, 0.010399941998975816, 0.010514017435495484, 0.01077143256424552, 0.01114173899456542, 0.01122342340817599, 0.013319785828430344, 0.013575169011328695, 0.01561187441262448, 0.016069994532730503, 0.01628164330173239, 0.016586819232936787, 0.016693948666966482, 0.024047119803404515, 0.02596220310723244, 0.02996421124947302, 0.030508217512759322, 0.035478668461442556, 0.16336272599158752, 0.40350022915139666], \"y\": [\"crosswalk_ar\", \"noparking_ar\", \"express\", \"car_lane\", \"speed_30\", \"school_cnt\", \"ssm_cnt\", \"cctv\", \"parkinglot_cnt\", \"pop_chd\", \"subway_cnt\", \"oneway\", \"TURN_P\", \"intersects\", \"house\", \"barrier_road\", \"width_4\", \"pop_all\", \"pop_sen\", \"width_1\", \"pop_prd\", \"office\", \"width_3\", \"speed_80_to_110\", \"safe_zone\", \"speed_0\", \"width_2\", \"general\", \"speed_60_to_70\", \"building_tot\", \"speed_40_to_50\", \"other\", \"cars_cnt\", \"width_5\", \"freq_max_inter\", \"sign_traffic\", \"restaurant_cnt\", \"time_max_inter\", \"trlight_pas\", \"trlight_car\", \"traffic_total_sum_inter\"]}],                        {\"height\": 2000, \"template\": {\"data\": {\"bar\": [{\"error_x\": {\"color\": \"#2a3f5f\"}, \"error_y\": {\"color\": \"#2a3f5f\"}, \"marker\": {\"line\": {\"color\": \"#E5ECF6\", \"width\": 0.5}}, \"type\": \"bar\"}], \"barpolar\": [{\"marker\": {\"line\": {\"color\": \"#E5ECF6\", \"width\": 0.5}}, \"type\": \"barpolar\"}], \"carpet\": [{\"aaxis\": {\"endlinecolor\": \"#2a3f5f\", \"gridcolor\": \"white\", \"linecolor\": \"white\", \"minorgridcolor\": \"white\", \"startlinecolor\": \"#2a3f5f\"}, \"baxis\": {\"endlinecolor\": \"#2a3f5f\", \"gridcolor\": \"white\", \"linecolor\": \"white\", \"minorgridcolor\": \"white\", \"startlinecolor\": \"#2a3f5f\"}, \"type\": \"carpet\"}], \"choropleth\": [{\"colorbar\": {\"outlinewidth\": 0, \"ticks\": \"\"}, \"type\": \"choropleth\"}], \"contour\": [{\"colorbar\": {\"outlinewidth\": 0, \"ticks\": \"\"}, \"colorscale\": [[0.0, \"#0d0887\"], [0.1111111111111111, \"#46039f\"], [0.2222222222222222, \"#7201a8\"], [0.3333333333333333, \"#9c179e\"], [0.4444444444444444, \"#bd3786\"], [0.5555555555555556, \"#d8576b\"], [0.6666666666666666, \"#ed7953\"], [0.7777777777777778, \"#fb9f3a\"], [0.8888888888888888, \"#fdca26\"], [1.0, \"#f0f921\"]], \"type\": \"contour\"}], \"contourcarpet\": [{\"colorbar\": {\"outlinewidth\": 0, \"ticks\": \"\"}, \"type\": \"contourcarpet\"}], \"heatmap\": [{\"colorbar\": {\"outlinewidth\": 0, \"ticks\": \"\"}, \"colorscale\": [[0.0, \"#0d0887\"], [0.1111111111111111, \"#46039f\"], [0.2222222222222222, \"#7201a8\"], [0.3333333333333333, \"#9c179e\"], [0.4444444444444444, \"#bd3786\"], [0.5555555555555556, \"#d8576b\"], [0.6666666666666666, \"#ed7953\"], [0.7777777777777778, \"#fb9f3a\"], [0.8888888888888888, \"#fdca26\"], [1.0, \"#f0f921\"]], \"type\": \"heatmap\"}], \"heatmapgl\": [{\"colorbar\": {\"outlinewidth\": 0, \"ticks\": \"\"}, \"colorscale\": [[0.0, \"#0d0887\"], [0.1111111111111111, \"#46039f\"], [0.2222222222222222, \"#7201a8\"], [0.3333333333333333, \"#9c179e\"], [0.4444444444444444, \"#bd3786\"], [0.5555555555555556, \"#d8576b\"], [0.6666666666666666, \"#ed7953\"], [0.7777777777777778, \"#fb9f3a\"], [0.8888888888888888, \"#fdca26\"], [1.0, \"#f0f921\"]], \"type\": \"heatmapgl\"}], \"histogram\": [{\"marker\": {\"colorbar\": {\"outlinewidth\": 0, \"ticks\": \"\"}}, \"type\": \"histogram\"}], \"histogram2d\": [{\"colorbar\": {\"outlinewidth\": 0, \"ticks\": \"\"}, \"colorscale\": [[0.0, \"#0d0887\"], [0.1111111111111111, \"#46039f\"], [0.2222222222222222, \"#7201a8\"], [0.3333333333333333, \"#9c179e\"], [0.4444444444444444, \"#bd3786\"], [0.5555555555555556, \"#d8576b\"], [0.6666666666666666, \"#ed7953\"], [0.7777777777777778, \"#fb9f3a\"], [0.8888888888888888, \"#fdca26\"], [1.0, \"#f0f921\"]], \"type\": \"histogram2d\"}], \"histogram2dcontour\": [{\"colorbar\": {\"outlinewidth\": 0, \"ticks\": \"\"}, \"colorscale\": [[0.0, \"#0d0887\"], [0.1111111111111111, \"#46039f\"], [0.2222222222222222, \"#7201a8\"], [0.3333333333333333, \"#9c179e\"], [0.4444444444444444, \"#bd3786\"], [0.5555555555555556, \"#d8576b\"], [0.6666666666666666, \"#ed7953\"], [0.7777777777777778, \"#fb9f3a\"], [0.8888888888888888, \"#fdca26\"], [1.0, \"#f0f921\"]], \"type\": \"histogram2dcontour\"}], \"mesh3d\": [{\"colorbar\": {\"outlinewidth\": 0, \"ticks\": \"\"}, \"type\": \"mesh3d\"}], \"parcoords\": [{\"line\": {\"colorbar\": {\"outlinewidth\": 0, \"ticks\": \"\"}}, \"type\": \"parcoords\"}], \"pie\": [{\"automargin\": true, \"type\": \"pie\"}], \"scatter\": [{\"marker\": {\"colorbar\": {\"outlinewidth\": 0, \"ticks\": \"\"}}, \"type\": \"scatter\"}], \"scatter3d\": [{\"line\": {\"colorbar\": {\"outlinewidth\": 0, \"ticks\": \"\"}}, \"marker\": {\"colorbar\": {\"outlinewidth\": 0, \"ticks\": \"\"}}, \"type\": \"scatter3d\"}], \"scattercarpet\": [{\"marker\": {\"colorbar\": {\"outlinewidth\": 0, \"ticks\": \"\"}}, \"type\": \"scattercarpet\"}], \"scattergeo\": [{\"marker\": {\"colorbar\": {\"outlinewidth\": 0, \"ticks\": \"\"}}, \"type\": \"scattergeo\"}], \"scattergl\": [{\"marker\": {\"colorbar\": {\"outlinewidth\": 0, \"ticks\": \"\"}}, \"type\": \"scattergl\"}], \"scattermapbox\": [{\"marker\": {\"colorbar\": {\"outlinewidth\": 0, \"ticks\": \"\"}}, \"type\": \"scattermapbox\"}], \"scatterpolar\": [{\"marker\": {\"colorbar\": {\"outlinewidth\": 0, \"ticks\": \"\"}}, \"type\": \"scatterpolar\"}], \"scatterpolargl\": [{\"marker\": {\"colorbar\": {\"outlinewidth\": 0, \"ticks\": \"\"}}, \"type\": \"scatterpolargl\"}], \"scatterternary\": [{\"marker\": {\"colorbar\": {\"outlinewidth\": 0, \"ticks\": \"\"}}, \"type\": \"scatterternary\"}], \"surface\": [{\"colorbar\": {\"outlinewidth\": 0, \"ticks\": \"\"}, \"colorscale\": [[0.0, \"#0d0887\"], [0.1111111111111111, \"#46039f\"], [0.2222222222222222, \"#7201a8\"], [0.3333333333333333, \"#9c179e\"], [0.4444444444444444, \"#bd3786\"], [0.5555555555555556, \"#d8576b\"], [0.6666666666666666, \"#ed7953\"], [0.7777777777777778, \"#fb9f3a\"], [0.8888888888888888, \"#fdca26\"], [1.0, \"#f0f921\"]], \"type\": \"surface\"}], \"table\": [{\"cells\": {\"fill\": {\"color\": \"#EBF0F8\"}, \"line\": {\"color\": \"white\"}}, \"header\": {\"fill\": {\"color\": \"#C8D4E3\"}, \"line\": {\"color\": \"white\"}}, \"type\": \"table\"}]}, \"layout\": {\"annotationdefaults\": {\"arrowcolor\": \"#2a3f5f\", \"arrowhead\": 0, \"arrowwidth\": 1}, \"autotypenumbers\": \"strict\", \"coloraxis\": {\"colorbar\": {\"outlinewidth\": 0, \"ticks\": \"\"}}, \"colorscale\": {\"diverging\": [[0, \"#8e0152\"], [0.1, \"#c51b7d\"], [0.2, \"#de77ae\"], [0.3, \"#f1b6da\"], [0.4, \"#fde0ef\"], [0.5, \"#f7f7f7\"], [0.6, \"#e6f5d0\"], [0.7, \"#b8e186\"], [0.8, \"#7fbc41\"], [0.9, \"#4d9221\"], [1, \"#276419\"]], \"sequential\": [[0.0, \"#0d0887\"], [0.1111111111111111, \"#46039f\"], [0.2222222222222222, \"#7201a8\"], [0.3333333333333333, \"#9c179e\"], [0.4444444444444444, \"#bd3786\"], [0.5555555555555556, \"#d8576b\"], [0.6666666666666666, \"#ed7953\"], [0.7777777777777778, \"#fb9f3a\"], [0.8888888888888888, \"#fdca26\"], [1.0, \"#f0f921\"]], \"sequentialminus\": [[0.0, \"#0d0887\"], [0.1111111111111111, \"#46039f\"], [0.2222222222222222, \"#7201a8\"], [0.3333333333333333, \"#9c179e\"], [0.4444444444444444, \"#bd3786\"], [0.5555555555555556, \"#d8576b\"], [0.6666666666666666, \"#ed7953\"], [0.7777777777777778, \"#fb9f3a\"], [0.8888888888888888, \"#fdca26\"], [1.0, \"#f0f921\"]]}, \"colorway\": [\"#636efa\", \"#EF553B\", \"#00cc96\", \"#ab63fa\", \"#FFA15A\", \"#19d3f3\", \"#FF6692\", \"#B6E880\", \"#FF97FF\", \"#FECB52\"], \"font\": {\"color\": \"#2a3f5f\"}, \"geo\": {\"bgcolor\": \"white\", \"lakecolor\": \"white\", \"landcolor\": \"#E5ECF6\", \"showlakes\": true, \"showland\": true, \"subunitcolor\": \"white\"}, \"hoverlabel\": {\"align\": \"left\"}, \"hovermode\": \"closest\", \"mapbox\": {\"style\": \"light\"}, \"paper_bgcolor\": \"white\", \"plot_bgcolor\": \"#E5ECF6\", \"polar\": {\"angularaxis\": {\"gridcolor\": \"white\", \"linecolor\": \"white\", \"ticks\": \"\"}, \"bgcolor\": \"#E5ECF6\", \"radialaxis\": {\"gridcolor\": \"white\", \"linecolor\": \"white\", \"ticks\": \"\"}}, \"scene\": {\"xaxis\": {\"backgroundcolor\": \"#E5ECF6\", \"gridcolor\": \"white\", \"gridwidth\": 2, \"linecolor\": \"white\", \"showbackground\": true, \"ticks\": \"\", \"zerolinecolor\": \"white\"}, \"yaxis\": {\"backgroundcolor\": \"#E5ECF6\", \"gridcolor\": \"white\", \"gridwidth\": 2, \"linecolor\": \"white\", \"showbackground\": true, \"ticks\": \"\", \"zerolinecolor\": \"white\"}, \"zaxis\": {\"backgroundcolor\": \"#E5ECF6\", \"gridcolor\": \"white\", \"gridwidth\": 2, \"linecolor\": \"white\", \"showbackground\": true, \"ticks\": \"\", \"zerolinecolor\": \"white\"}}, \"shapedefaults\": {\"line\": {\"color\": \"#2a3f5f\"}}, \"ternary\": {\"aaxis\": {\"gridcolor\": \"white\", \"linecolor\": \"white\", \"ticks\": \"\"}, \"baxis\": {\"gridcolor\": \"white\", \"linecolor\": \"white\", \"ticks\": \"\"}, \"bgcolor\": \"#E5ECF6\", \"caxis\": {\"gridcolor\": \"white\", \"linecolor\": \"white\", \"ticks\": \"\"}}, \"title\": {\"x\": 0.05}, \"xaxis\": {\"automargin\": true, \"gridcolor\": \"white\", \"linecolor\": \"white\", \"ticks\": \"\", \"title\": {\"standoff\": 15}, \"zerolinecolor\": \"white\", \"zerolinewidth\": 2}, \"yaxis\": {\"automargin\": true, \"gridcolor\": \"white\", \"linecolor\": \"white\", \"ticks\": \"\", \"title\": {\"standoff\": 15}, \"zerolinecolor\": \"white\", \"zerolinewidth\": 2}}}, \"title\": {\"text\": \"Barplot of feature importances\"}, \"width\": 900, \"yaxis\": {\"domain\": [1, 1], \"showgrid\": false, \"showline\": false, \"showticklabels\": true}},                        {\"responsive\": true}                    ).then(function(){\n",
+              "                            \n",
+              "var gd = document.getElementById('37c10136-ece0-4f5e-9c86-091611eb2bf3');\n",
+              "var x = new MutationObserver(function (mutations, observer) {{\n",
+              "        var display = window.getComputedStyle(gd).display;\n",
+              "        if (!display || display === 'none') {{\n",
+              "            console.log([gd, 'removed!']);\n",
+              "            Plotly.purge(gd);\n",
+              "            observer.disconnect();\n",
+              "        }}\n",
+              "}});\n",
+              "\n",
+              "// Listen for the removal of the full notebook cells\n",
+              "var notebookContainer = gd.closest('#notebook-container');\n",
+              "if (notebookContainer) {{\n",
+              "    x.observe(notebookContainer, {childList: true});\n",
+              "}}\n",
+              "\n",
+              "// Listen for the clearing of the current output cell\n",
+              "var outputEl = gd.closest('.output');\n",
+              "if (outputEl) {{\n",
+              "    x.observe(outputEl, {childList: true});\n",
+              "}}\n",
+              "\n",
+              "                        })                };                });            </script>        </div>"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          }
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "8LmH8hYWozp7"
+      },
+      "source": [
+        "교통량 합계와 차량등의 중요도가 높음"
+      ],
+      "id": "8LmH8hYWozp7"
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "js8WxgGXozp7"
+      },
+      "source": [
+        "#### 모델 성능평가"
+      ],
+      "id": "js8WxgGXozp7"
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "Re8BTM8Bozp7"
+      },
+      "source": [
+        "k-fold 교차검증"
+      ],
+      "id": "Re8BTM8Bozp7"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "ouv6XZulozp7"
+      },
+      "source": [
+        "k_fold = KFold(n_splits=5, shuffle=True, random_state=2021)"
+      ],
+      "id": "ouv6XZulozp7",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "oz2OREbAozp7"
+      },
+      "source": [
+        "from sklearn.metrics import make_scorer\n",
+        "\n",
+        "\n",
+        "def RMSE(pred, y):\n",
+        "    rmse = ( np.sum([x**2 for x in (np.array(y)-np.array(pred))]) / len(y) )**(1/2)\n",
+        "    return round(rmse, 4)\n",
+        "    \n",
+        "def MAE(pred, y):\n",
+        "    mae = np.sum([np.abs(x) for x in (np.array(y)-np.array(pred))]) / len(y)\n",
+        "    return round(mae, 4)\n",
+        "\n",
+        "\n",
+        "rmse_scorer = make_scorer(RMSE)\n",
+        "mae_scorer = make_scorer(MAE)"
+      ],
+      "id": "oz2OREbAozp7",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "H3vGg1x9ozp7"
+      },
+      "source": [
+        "#### 원본 데이터 스코어"
+      ],
+      "id": "H3vGg1x9ozp7"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "HGGjpkjRozp7"
+      },
+      "source": [
+        "rmse_score = cross_val_score(rf, x_temp, y_temp, cv=k_fold, scoring = rmse_scorer)\n",
+        "mae_score = cross_val_score(rf, x_temp, y_temp, cv=k_fold, scoring = mae_scorer)"
+      ],
+      "id": "HGGjpkjRozp7",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "FZrDzSIIozp8",
+        "outputId": "17413302-e462-4371-98c3-0b62fe982ed2"
+      },
+      "source": [
+        "rmse_score = rmse_score.mean()\n",
+        "mae_score = mae_score.mean()\n",
+        "\n",
+        "print('rmse: score={0:.5f}'.format(rmse_score))\n",
+        "print('mae: score={0:.5f}'.format(mae_score))"
+      ],
+      "id": "FZrDzSIIozp8",
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "rmse: score=3.15572\n",
+            "mae: score=1.35036\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "tLCbtN7wozp8"
+      },
+      "source": [
+        "#### 스케일 데이터 스코어"
+      ],
+      "id": "tLCbtN7wozp8"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "RB6n_k3wozp8"
+      },
+      "source": [
+        "rmse_score = cross_val_score(rf, x_temp_sc, y_temp_sc, cv=k_fold, scoring = rmse_scorer)\n",
+        "mae_score = cross_val_score(rf, x_temp_sc, y_temp_sc, cv=k_fold, scoring = mae_scorer)"
+      ],
+      "id": "RB6n_k3wozp8",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "7BH0Yq4qozp8",
+        "outputId": "fbb08b7d-0e71-40e5-ab15-99d0d49df551"
+      },
+      "source": [
+        "rmse_score = rmse_score.mean()\n",
+        "mae_score = mae_score.mean()\n",
+        "\n",
+        "print('rmse: score={0:.5f}'.format(rmse_score))\n",
+        "print('mae: score={0:.5f}'.format(mae_score))"
+      ],
+      "id": "7BH0Yq4qozp8",
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "rmse: score=3.14444\n",
+            "mae: score=1.34148\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "6riDlqu0ozp8"
+      },
+      "source": [
+        "- ### LGBM regressor"
+      ],
+      "id": "6riDlqu0ozp8"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "4BNrcz4Wozp8"
+      },
+      "source": [
+        "lgbm = LGBMRegressor(num_iterations = 200, random_state=2021)"
+      ],
+      "id": "4BNrcz4Wozp8",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "ZZv_y881ozp8"
+      },
+      "source": [
+        "#### 원본 데이터 스코어"
+      ],
+      "id": "ZZv_y881ozp8"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "OFGZ548Lozp9"
+      },
+      "source": [
+        "rmse_score = cross_val_score(lgbm, x_temp, y_temp, cv=k_fold, scoring = rmse_scorer)\n",
+        "mae_score = cross_val_score(lgbm, x_temp, y_temp, cv=k_fold, scoring = mae_scorer)"
+      ],
+      "id": "OFGZ548Lozp9",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "fR_kSx4nozp9",
+        "outputId": "468fbb6c-5b2a-47a1-b0b9-82a06b76f62c"
+      },
+      "source": [
+        "rmse_score = rmse_score.mean()\n",
+        "mae_score = mae_score.mean()\n",
+        "\n",
+        "print('rmse: score={0:.5f}'.format(rmse_score))\n",
+        "print('mae: score={0:.5f}'.format(mae_score))"
+      ],
+      "id": "fR_kSx4nozp9",
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "rmse: score=3.12622\n",
+            "mae: score=1.30864\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "5iTerdEtozp9"
+      },
+      "source": [
+        "#### 스케일 데이터 스코어"
+      ],
+      "id": "5iTerdEtozp9"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "lJ0FMadMozp9"
+      },
+      "source": [
+        "rmse_score = cross_val_score(lgbm, x_temp_sc, y_temp_sc, cv=k_fold, scoring = rmse_scorer)\n",
+        "mae_score = cross_val_score(lgbm, x_temp_sc, y_temp_sc, cv=k_fold, scoring = mae_scorer)"
+      ],
+      "id": "lJ0FMadMozp9",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "j4_pSffIozp9",
+        "outputId": "8ed16a8b-714c-4f78-8766-1e6d97be1f24"
+      },
+      "source": [
+        "rmse_score = rmse_score.mean()\n",
+        "mae_score = mae_score.mean()\n",
+        "\n",
+        "print('rmse: score={0:.5f}'.format(rmse_score))\n",
+        "print('mae: score={0:.5f}'.format(mae_score))"
+      ],
+      "id": "j4_pSffIozp9",
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "rmse: score=3.12622\n",
+            "mae: score=1.30864\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "9Vz_XQIVozp9"
+      },
+      "source": [
+        "- ### XGB regressor"
+      ],
+      "id": "9Vz_XQIVozp9"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "Ayn6X-i1ozp9"
+      },
+      "source": [
+        "xgb = XGBRegressor(booster = 'gbtree',n_estimators = 200, random_state=2021)"
+      ],
+      "id": "Ayn6X-i1ozp9",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "1U7H5Qfkozp9"
+      },
+      "source": [
+        "#### 원본 데이터 스코어"
+      ],
+      "id": "1U7H5Qfkozp9"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "orhD9lt5ozp-"
+      },
+      "source": [
+        "rmse_score = cross_val_score(xgb, x_temp, y_temp, cv=k_fold, scoring = rmse_scorer)\n",
+        "mae_score = cross_val_score(xgb, x_temp, y_temp, cv=k_fold, scoring = mae_scorer)"
+      ],
+      "id": "orhD9lt5ozp-",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "xlhoaxpoozp-",
+        "outputId": "dac96323-d7ed-43be-b50f-a962b4ec07c1"
+      },
+      "source": [
+        "rmse_score = rmse_score.mean()\n",
+        "mae_score = mae_score.mean()\n",
+        "\n",
+        "print('rmse: score={0:.5f}'.format(rmse_score))\n",
+        "print('mae: score={0:.5f}'.format(mae_score))"
+      ],
+      "id": "xlhoaxpoozp-",
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "rmse: score=3.27824\n",
+            "mae: score=1.39372\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "qzz8vXhBozp-"
+      },
+      "source": [
+        "#### 스케일 데이터 스코어"
+      ],
+      "id": "qzz8vXhBozp-"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "UtO_TQwNozp-"
+      },
+      "source": [
+        "rmse_score = cross_val_score(xgb, x_temp_sc, y_temp_sc, cv=k_fold, scoring = rmse_scorer)\n",
+        "mae_score = cross_val_score(xgb, x_temp_sc, y_temp_sc, cv=k_fold, scoring = mae_scorer)"
+      ],
+      "id": "UtO_TQwNozp-",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "scrolled": true,
+        "id": "lAyqKreKozp-",
+        "outputId": "99feffe4-bbbb-407c-ab68-9768c8e85d4e"
+      },
+      "source": [
+        "rmse_score = rmse_score.mean()\n",
+        "mae_score = mae_score.mean()\n",
+        "\n",
+        "print('rmse: score={0:.5f}'.format(rmse_score))\n",
+        "print('mae: score={0:.5f}'.format(mae_score))"
+      ],
+      "id": "lAyqKreKozp-",
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "rmse: score=3.27922\n",
+            "mae: score=1.39388\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "VSMIsNHxozp-"
+      },
+      "source": [
+        "- ### knn"
+      ],
+      "id": "VSMIsNHxozp-"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "BOKgojuNozp-"
+      },
+      "source": [
+        "knn = KNeighborsRegressor()"
+      ],
+      "id": "BOKgojuNozp-",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "jEXPtpy7ozp-"
+      },
+      "source": [
+        "rmse_score = cross_val_score(knn, x_temp, y_temp, cv=k_fold, scoring = rmse_scorer)\n",
+        "mae_score = cross_val_score(knn, x_temp, y_temp, cv=k_fold, scoring = mae_scorer)"
+      ],
+      "id": "jEXPtpy7ozp-",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "JF-d9rkCozp_",
+        "outputId": "67919cc6-6fac-4994-e5d6-edc170ada497"
+      },
+      "source": [
+        "rmse_score = rmse_score.mean()\n",
+        "mae_score = mae_score.mean()\n",
+        "\n",
+        "print('rmse: score={0:.5f}'.format(rmse_score))\n",
+        "print('mae: score={0:.5f}'.format(mae_score))"
+      ],
+      "id": "JF-d9rkCozp_",
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "rmse: score=4.09636\n",
+            "mae: score=1.72292\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "s4UDHFNgozp_"
+      },
+      "source": [
+        "스케일"
+      ],
+      "id": "s4UDHFNgozp_"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "GGRTHd5xozp_"
+      },
+      "source": [
+        "rmse_score = cross_val_score(knn, x_temp_sc, y_temp_sc, cv=k_fold, scoring = rmse_scorer)\n",
+        "mae_score = cross_val_score(knn, x_temp_sc, y_temp_sc, cv=k_fold, scoring = mae_scorer)"
+      ],
+      "id": "GGRTHd5xozp_",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "ATGi8oDtozp_",
+        "outputId": "bb033f8d-f1dd-4633-f141-060a716887c0"
+      },
+      "source": [
+        "rmse_score = rmse_score.mean()\n",
+        "mae_score = mae_score.mean()\n",
+        "\n",
+        "print('rmse: score={0:.5f}'.format(rmse_score))\n",
+        "print('mae: score={0:.5f}'.format(mae_score))"
+      ],
+      "id": "ATGi8oDtozp_",
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "rmse: score=3.51486\n",
+            "mae: score=1.39640\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "PWet_O0Lozp_"
+      },
+      "source": [
+        "- ### 릿지"
+      ],
+      "id": "PWet_O0Lozp_"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "-XPWVjh5ozp_"
+      },
+      "source": [
+        "rid = Ridge()"
+      ],
+      "id": "-XPWVjh5ozp_",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "vYD8Hd6CozqA"
+      },
+      "source": [
+        "rmse_score = cross_val_score(rid, x_temp, y_temp, cv=k_fold, scoring = rmse_scorer)\n",
+        "mae_score = cross_val_score(rid, x_temp, y_temp, cv=k_fold, scoring = mae_scorer)"
+      ],
+      "id": "vYD8Hd6CozqA",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "EJ7No951ozqA",
+        "outputId": "883b7fb2-957d-47ff-8987-23755c501026"
+      },
+      "source": [
+        "rmse_score = rmse_score.mean()\n",
+        "mae_score = mae_score.mean()\n",
+        "\n",
+        "print('rmse: score={0:.5f}'.format(rmse_score))\n",
+        "print('mae: score={0:.5f}'.format(mae_score))"
+      ],
+      "id": "EJ7No951ozqA",
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "rmse: score=3.35202\n",
+            "mae: score=1.63068\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "LXZh6en6ozqA"
+      },
+      "source": [
+        "스케일"
+      ],
+      "id": "LXZh6en6ozqA"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "fTNRxyD5ozqA"
+      },
+      "source": [
+        "rmse_score = cross_val_score(rid, x_temp_sc, y_temp_sc, cv=k_fold, scoring = rmse_scorer)\n",
+        "mae_score = cross_val_score(rid, x_temp_sc, y_temp_sc, cv=k_fold, scoring = mae_scorer)"
+      ],
+      "id": "fTNRxyD5ozqA",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "xDEhThEcozqA",
+        "outputId": "b9e1f2d8-332d-42f3-a4e2-300448280cca"
+      },
+      "source": [
+        "rmse_score = rmse_score.mean()\n",
+        "mae_score = mae_score.mean()\n",
+        "\n",
+        "print('rmse: score={0:.5f}'.format(rmse_score))\n",
+        "print('mae: score={0:.5f}'.format(mae_score))"
+      ],
+      "id": "xDEhThEcozqA",
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "rmse: score=3.29762\n",
+            "mae: score=1.60796\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "nAbQ-dk-ozqA"
+      },
+      "source": [
+        "- ### SVR"
+      ],
+      "id": "nAbQ-dk-ozqA"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "m8aWAhgIozqA"
+      },
+      "source": [
+        "svr_lin = SVR(kernel = 'linear')\n",
+        "svr_poly = SVR(kernel = 'poly')\n",
+        "svr_rbf = SVR(kernel = 'rbf')\n",
+        "svr_sig = SVR(kernel = 'sigmoid')"
+      ],
+      "id": "m8aWAhgIozqA",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "M5TWhds4ozqB"
+      },
+      "source": [
+        "ploy 커넬"
+      ],
+      "id": "M5TWhds4ozqB"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "CeXm5b1bozqB"
+      },
+      "source": [
+        "rmse_score_poly = cross_val_score(svr_poly, x_temp, y_temp, cv=k_fold, scoring = rmse_scorer)\n",
+        "mae_score_poly = cross_val_score(svr_poly, x_temp, y_temp, cv=k_fold, scoring = mae_scorer)"
+      ],
+      "id": "CeXm5b1bozqB",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "A0nUvTDBozqB",
+        "outputId": "7ed523af-6f5b-48a4-fc77-46bd1a8df604"
+      },
+      "source": [
+        "rmse_score_poly = rmse_score_poly.mean()\n",
+        "mae_score_poly = mae_score_poly.mean()\n",
+        "\n",
+        "print('rmse: score={0:.5f}'.format(rmse_score_poly))\n",
+        "print('mae: score={0:.5f}'.format(mae_score_poly))"
+      ],
+      "id": "A0nUvTDBozqB",
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "rmse: score=4.38074\n",
+            "mae: score=1.54948\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "ftT69SIzozqB"
+      },
+      "source": [
+        "rbf 커넬"
+      ],
+      "id": "ftT69SIzozqB"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "itBbdrJ8ozqB"
+      },
+      "source": [
+        "rmse_score_rbf = cross_val_score(svr_rbf, x_temp, y_temp, cv=k_fold, scoring = rmse_scorer)\n",
+        "mae_score_rbf = cross_val_score(svr_rbf, x_temp, y_temp, cv=k_fold, scoring = mae_scorer)"
+      ],
+      "id": "itBbdrJ8ozqB",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "aERl0cSuozqB",
+        "outputId": "1b7a1f5f-dd3c-4a4e-9ca0-3f0a5092f81a"
+      },
+      "source": [
+        "rmse_score_rbf = rmse_score_rbf.mean()\n",
+        "mae_score_rbf = mae_score_rbf.mean()\n",
+        "\n",
+        "print('rmse: score={0:.5f}'.format(rmse_score_rbf))\n",
+        "print('mae: score={0:.5f}'.format(mae_score_rbf))"
+      ],
+      "id": "aERl0cSuozqB",
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "rmse: score=4.20186\n",
+            "mae: score=1.54114\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "JjfHn9D2ozqB"
+      },
+      "source": [
+        "# 3. Deep Learning Model"
+      ],
+      "id": "JjfHn9D2ozqB"
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "xZD7ScWwozqB"
+      },
+      "source": [
+        "- ### 다층 퍼셉트론(keras sequential) "
+      ],
+      "id": "xZD7ScWwozqB"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "s4JD2zCAozqC"
+      },
+      "source": [
+        "# activation function 정의: selu function\n",
+        "\n",
+        "alpha_0_1 = -np.sqrt(2/np.pi) / ( erfc(1/np.sqrt(2)) * np.exp(1/2) -1 )\n",
+        "scale_0_1 = ( 1 - erfc(1/np.sqrt(2)) * np.sqrt(np.e)) * np.sqrt(2*np.pi) * ( 2 * erfc(np.sqrt(2))*np.e**2 + \n",
+        "                                                                           np.pi*erfc(1/np.sqrt(2))**2*np.e -\n",
+        "                                                                           2*(2+np.pi)*erfc(1/np.sqrt(2))*np.sqrt(np.e) +\n",
+        "                                                                           np.pi + 2 )**(-1/2)\n",
+        "\n",
+        "def selu(z, scale = scale_0_1, alpha = alpha_0_1) :\n",
+        "    return scale * tf.where(z>=0.0, z, alpha*tf.nn.elu(z))"
+      ],
+      "id": "s4JD2zCAozqC",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "aCz7Qxh0ozqC"
+      },
+      "source": [
+        "def build_model() :\n",
+        "    model = tf.keras.models.Sequential()\n",
+        "    model.add(tf.keras.layers.Dense(30, activation=selu, input_shape=(x_train.shape[1],)))\n",
+        "    model.add(tf.keras.layers.BatchNormalization())\n",
+        "    model.add(tf.keras.layers.Dense(15, activation=selu))\n",
+        "    model.add(tf.keras.layers.BatchNormalization())\n",
+        "    model.add(tf.keras.layers.Dense(1))\n",
+        "    opt = tf.compat.v1.train.GradientDescentOptimizer(learning_rate=0.01)\n",
+        "    model.compile(optimizer=opt, loss='mse', metrics=['mae'])\n",
+        "    return model"
+      ],
+      "id": "aCz7Qxh0ozqC",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "GhhrzrjsozqC"
+      },
+      "source": [
+        "k_fold = KFold(n_splits=5, shuffle=True, random_state=2021)"
+      ],
+      "id": "GhhrzrjsozqC",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "4lzrHQUBozqC"
+      },
+      "source": [
+        "from keras.wrappers.scikit_learn import KerasRegressor"
+      ],
+      "id": "4lzrHQUBozqC",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "gppfecdAozqC"
+      },
+      "source": [
+        "model = KerasRegressor(build_fn=build_model, epochs=150, batch_size=10, verbose=0)"
+      ],
+      "id": "gppfecdAozqC",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "4VqD5GmrozqC"
+      },
+      "source": [
+        "rmse_score = cross_val_score(model, x_temp, y_temp, cv=k_fold, scoring = rmse_scorer)\n",
+        "mae_score = cross_val_score(model, x_temp, y_temp, cv=k_fold, scoring = mae_scorer)"
+      ],
+      "id": "4VqD5GmrozqC",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "rJqqWwNkozqC",
+        "outputId": "0f33337b-fd98-4a5f-bc8d-031b9200fcd7"
+      },
+      "source": [
+        "rmse_score = rmse_score.mean()\n",
+        "mae_score = mae_score.mean()\n",
+        "\n",
+        "print('rmse: score={0:.5f}'.format(rmse_score))\n",
+        "print('mae: score={0:.5f}'.format(mae_score))"
+      ],
+      "id": "rJqqWwNkozqC",
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "rmse: score=263.79558\n",
+            "mae: score=10.92802\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "-r7L5ti9ozqD"
+      },
+      "source": [
+        "# 4. 결과\n",
+        "\n",
+        "\n",
+        "> 딥러닝모델의 경우, 오버피팅에 민감한 특성이 있기 때문에 매우 좋지 않은 결과를 볼 수 있다.\n",
+        "\n",
+        "> 머신러닝 모델 사이에서는 LGBM의 성능이 가장 좋지만 다른 모델들과 큰 차이를 볼 수는 없었다.\n",
+        "\n",
+        "> __딥러닝과 머신러닝 모델 모두 눈에 띄게 좋은 예측력을 보여주지 못했고, 결과에 대한 해석이 어려워 교통사고에 영향을 주는 요인을 파악해야 하는 우리 분석의 방향과 맞지 않다고 생각했다.__"
+      ],
+      "id": "-r7L5ti9ozqD"
+    }
+  ]
+}
