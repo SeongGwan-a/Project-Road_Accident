@@ -2,7 +2,9 @@
 대전시 교통사고 위험지역 도출 by LH
 
 참가 팀명 : Meetwin
-팀원 : 
+
+팀원 : 고태영, 김권호, 김성관, 박주형, 조형래
+
 링크: https://compas.lh.or.kr/subj/past/info?subjNo=SBJ_2102_003
 
 # 1. 과제 개요
